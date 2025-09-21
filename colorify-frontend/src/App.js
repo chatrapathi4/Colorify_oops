@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import HexFinder from "./components/HexFinder";
 import Templates from "./components/Templates";
 import Suggestions from "./components/Suggestions";
+import DressColors from "./components/DressColors";
 import './App.css';
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
         return <Templates />;
       case 'suggestions':
         return <Suggestions />;
+      case 'dress-colors':
+        return <DressColors />;
       default:
         return (
           <div className="home-page">
@@ -41,10 +44,10 @@ function App() {
                       🎨 Start Creating
                     </button>
                     <button 
-                      onClick={() => setActiveSection('templates')}
+                      onClick={() => setActiveSection('dress-colors')}
                       className="btn btn-secondary hero-btn"
                     >
-                      📐 Browse Templates
+                      👗 Style Outfits
                     </button>
                   </div>
                 </div>
@@ -100,11 +103,11 @@ function App() {
                   </div>
                   
                   <div className="feature-card">
-                    <div className="feature-icon">📱</div>
-                    <h3 className="feature-title">Camera Integration</h3>
+                    <div className="feature-icon">👗</div>
+                    <h3 className="feature-title">Fashion Colors</h3>
                     <p className="feature-description">
-                      Extract colors directly from your camera or uploaded images 
-                      to create custom palettes.
+                      Perfect color combinations for outfits based on occasion, 
+                      season, and personal style preferences.
                     </p>
                   </div>
                 </div>
@@ -185,6 +188,29 @@ function App() {
                       <span className="action-text">Get Suggestions →</span>
                     </div>
                   </div>
+
+                  <div className="tool-card" onClick={() => setActiveSection('dress-colors')}>
+                    <div className="tool-header">
+                      <div className="tool-icon">👗</div>
+                      <h3 className="tool-title">Dress Colors</h3>
+                    </div>
+                    <div className="tool-content">
+                      <p className="tool-description">
+                        Perfect color combinations for outfits based on occasion, 
+                        season, skin tone, and personal style preferences.
+                      </p>
+                      <div className="tool-features">
+                        <span className="tool-feature">✓ Outfit Suggestions</span>
+                        <span className="tool-feature">✓ Occasion Filters</span>
+                        <span className="tool-feature">✓ Skin Tone Match</span>
+                        <span className="tool-feature">✓ Styling Tips</span>
+                        <span className="tool-feature">✓ Complete Guides</span>
+                      </div>
+                    </div>
+                    <div className="tool-action">
+                      <span className="action-text">Find Perfect Outfits →</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </section>
@@ -241,11 +267,11 @@ function App() {
                   </div>
                   
                   <div className="use-case">
-                    <div className="use-case-icon">🎬</div>
-                    <h3 className="use-case-title">Content Creation</h3>
+                    <div className="use-case-icon">👗</div>
+                    <h3 className="use-case-title">Fashion Styling</h3>
                     <p className="use-case-description">
-                      Create cohesive color themes for videos, social media, 
-                      and marketing materials.
+                      Create perfect outfit combinations with colors that complement 
+                      your skin tone and occasion.
                     </p>
                   </div>
                 </div>
@@ -265,8 +291,8 @@ function App() {
                     <div className="stat-label">AI Categories</div>
                   </div>
                   <div className="stat-item">
-                    <div className="stat-number">∞</div>
-                    <div className="stat-label">Color Combinations</div>
+                    <div className="stat-number">100+</div>
+                    <div className="stat-label">Outfit Combos</div>
                   </div>
                   <div className="stat-item">
                     <div className="stat-number">100%</div>
@@ -293,10 +319,10 @@ function App() {
                       🚀 Start Creating Now
                     </button>
                     <button 
-                      onClick={() => setActiveSection('suggestions')}
+                      onClick={() => setActiveSection('dress-colors')}
                       className="btn btn-accent cta-btn"
                     >
-                      🤖 Try AI Suggestions
+                      👗 Find Perfect Outfits
                     </button>
                   </div>
                 </div>

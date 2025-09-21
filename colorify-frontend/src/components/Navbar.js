@@ -8,7 +8,8 @@ const Navbar = ({ activeSection, setActiveSection }) => {
     { id: 'home', label: 'Home' },
     { id: 'hex-finder', label: 'HEX Finder' },
     { id: 'templates', label: 'Templates' },
-    { id: 'suggestions', label: 'Suggestions' }
+    { id: 'suggestions', label: 'Suggestions' },
+    { id: 'dress-colors', label: 'Outfit suuggestions' }, // New navigation item
   ];
 
   const handleLinkClick = (id) => {
@@ -38,7 +39,7 @@ const Navbar = ({ activeSection, setActiveSection }) => {
 
           {/* Left side navigation - Desktop */}
           <div className="navbar-links">
-            {navItems.slice(0, 2).map((item) => (
+            {navItems.slice(0, 3).map((item) => ( // Updated to show first 3 items
               <button
                 key={item.id}
                 className={`navbar-link ${activeSection === item.id ? 'active' : ''}`}
@@ -58,7 +59,7 @@ const Navbar = ({ activeSection, setActiveSection }) => {
 
           {/* Right side navigation - Desktop */}
           <div className="navbar-links">
-            {navItems.slice(2).map((item) => (
+            {navItems.slice(3).map((item) => ( // Updated to show remaining items
               <button
                 key={item.id}
                 className={`navbar-link ${activeSection === item.id ? 'active' : ''}`}

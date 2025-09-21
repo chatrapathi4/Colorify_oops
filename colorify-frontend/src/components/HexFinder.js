@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './HexFinder.css';
 
 const HexFinder = () => {
-  const [hexInput, setHexInput] = useState('');
+  const [hexInput, setHexInput] = useState('#3B82F6');
   const [currentColor, setCurrentColor] = useState('#3B82F6');
   const [rgbInput, setRgbInput] = useState({ r: 59, g: 130, b: 246 });
   const [palette, setPalette] = useState([]);
@@ -16,26 +16,37 @@ const HexFinder = () => {
   const [cameraError, setCameraError] = useState('');
   const [cameraReady, setCameraReady] = useState(false);
   
+  // New states for pointer functionality
+  const [pointerPosition, setPointerPosition] = useState({ x: 0, y: 0 });
+  const [pointerColor, setPointerColor] = useState('#000000');
+  const [showPointer, setShowPointer] = useState(false);
+  const [currentImageFile, setCurrentImageFile] = useState(null);
+  
   // Refs
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
+  const imageRef = useRef(null);
 
   const API_BASE_URL = 'http://localhost:8080/api/hex';
   const IMAGE_API_BASE_URL = 'http://localhost:8080/api/image';
 
-  // Existing color functions remain the same...
+  // Color functions
   const generateRandomColor = async () => {
     setIsLoading(true);
     try {
       const response = await fetch(`${API_BASE_URL}/random`);
       const data = await response.json();
-      setCurrentColor(data.hex);
-      setHexInput(data.hex);
-      setRgbInput(data.rgb);
-      setValidationMessage('Random color generated!');
+      
+      if (data.hex && data.rgb) {
+        setCurrentColor(data.hex);
+        setHexInput(data.hex);
+        setRgbInput(data.rgb);
+        setValidationMessage('Random color generated!');
+      }
     } catch (error) {
+      console.error('Error generating random color:', error);
       setValidationMessage('Error generating random color');
     }
     setIsLoading(false);
@@ -45,17 +56,20 @@ const HexFinder = () => {
     if (!hex) return;
     
     try {
-      const response = await fetch(`${API_BASE_URL}/validate/${hex.replace('#', '')}`);
+      const cleanHex = hex.startsWith('#') ? hex.substring(1) : hex;
+      const response = await fetch(`${API_BASE_URL}/validate/${cleanHex}`);
       const data = await response.json();
       
       if (data.valid) {
         setCurrentColor(data.hex);
+        setHexInput(data.hex);
         setRgbInput(data.rgb);
         setValidationMessage('Valid HEX color!');
       } else {
-        setValidationMessage(data.message);
+        setValidationMessage(data.message || 'Invalid HEX color format');
       }
     } catch (error) {
+      console.error('Error validating color:', error);
       setValidationMessage('Error validating color');
     }
   };
@@ -72,14 +86,16 @@ const HexFinder = () => {
       });
       const data = await response.json();
       
-      if (data.hex) {
+      if (data.hex && data.rgb) {
         setCurrentColor(data.hex);
         setHexInput(data.hex);
+        setRgbInput(data.rgb);
         setValidationMessage('RGB converted to HEX!');
       } else {
         setValidationMessage(data.error || 'Error converting RGB');
       }
     } catch (error) {
+      console.error('Error converting RGB:', error);
       setValidationMessage('Error converting RGB to HEX');
     }
     setIsLoading(false);
@@ -90,7 +106,8 @@ const HexFinder = () => {
     
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/palette/${currentColor.replace('#', '')}`);
+      const cleanHex = currentColor.startsWith('#') ? currentColor.substring(1) : currentColor;
+      const response = await fetch(`${API_BASE_URL}/palette/${cleanHex}`);
       const data = await response.json();
       
       if (data.palette) {
@@ -100,6 +117,7 @@ const HexFinder = () => {
         setValidationMessage(data.error || 'Error generating palette');
       }
     } catch (error) {
+      console.error('Error generating palette:', error);
       setValidationMessage('Error generating palette');
     }
     setIsLoading(false);
@@ -115,18 +133,23 @@ const HexFinder = () => {
 
   const processImageFile = async (file) => {
     setIsLoading(true);
+    setCurrentImageFile(file);
     
     // Create preview
     const reader = new FileReader();
     reader.onload = (e) => {
       setImagePreview(e.target.result);
+      setShowPointer(true);
     };
     reader.readAsDataURL(file);
 
-    // Extract colors
+    // Extract colors with improved accuracy
     try {
       const formData = new FormData();
       formData.append('image', file);
+      formData.append('sampleRate', '5');
+      formData.append('colorCount', '15');
+      formData.append('minFrequency', '0.01');
 
       const response = await fetch(`${IMAGE_API_BASE_URL}/extract-colors`, {
         method: 'POST',
@@ -135,28 +158,98 @@ const HexFinder = () => {
 
       const data = await response.json();
       
-      if (data.colors) {
+      if (data.colors && data.colors.length > 0) {
         setExtractedColors(data.colors);
         setValidationMessage(`Extracted ${data.colors.length} dominant colors from image!`);
         
-        // Set the most dominant color as current color
-        if (data.colors.length > 0) {
-          const dominantColor = data.colors[0];
-          setCurrentColor(dominantColor.hex);
-          setHexInput(dominantColor.hex);
-          setRgbInput(dominantColor.rgb);
-        }
+        // Automatically set the most dominant color
+        const dominantColor = data.colors[0];
+        setCurrentColor(dominantColor.hex);
+        setHexInput(dominantColor.hex);
+        setRgbInput(dominantColor.rgb);
       } else {
-        setValidationMessage(data.error || 'Error extracting colors from image');
+        setValidationMessage(data.error || 'No colors could be extracted from this image');
       }
     } catch (error) {
+      console.error('Error processing image:', error);
       setValidationMessage('Error processing image');
     }
     
     setIsLoading(false);
   };
 
-  // IMPROVED CAMERA FUNCTIONS
+  // Color point analysis
+  const getColorAtPoint = async (x, y) => {
+    if (!currentImageFile) return '#000000';
+
+    try {
+      const formData = new FormData();
+      formData.append('image', currentImageFile);
+      formData.append('x', Math.round(x));
+      formData.append('y', Math.round(y));
+
+      const response = await fetch(`${IMAGE_API_BASE_URL}/analyze-color-at-point`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      
+      if (data.color) {
+        setPointerColor(data.color.hex);
+        return data.color.hex;
+      }
+    } catch (error) {
+      console.error('Error getting color at point:', error);
+    }
+    return '#000000';
+  };
+
+  // Image interaction handlers
+  const handleImageMouseMove = async (e) => {
+    if (!showPointer || !imageRef.current) return;
+
+    const rect = imageRef.current.getBoundingClientRect();
+    const scaleX = imageRef.current.naturalWidth / rect.width;
+    const scaleY = imageRef.current.naturalHeight / rect.height;
+    
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+    
+    setPointerPosition({ 
+      x: e.clientX - rect.left, 
+      y: e.clientY - rect.top 
+    });
+    
+    await getColorAtPoint(x, y);
+  };
+
+  const handleImageClick = async (e) => {
+    if (!showPointer || !imageRef.current) return;
+
+    const rect = imageRef.current.getBoundingClientRect();
+    const scaleX = imageRef.current.naturalWidth / rect.width;
+    const scaleY = imageRef.current.naturalHeight / rect.height;
+    
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+    
+    const color = await getColorAtPoint(x, y);
+    if (color && color !== '#000000') {
+      setCurrentColor(color);
+      setHexInput(color);
+      
+      // Convert hex to RGB
+      const r = parseInt(color.substring(1, 3), 16);
+      const g = parseInt(color.substring(3, 5), 16);
+      const b = parseInt(color.substring(5, 7), 16);
+      setRgbInput({ r, g, b });
+      
+      setValidationMessage(`Selected color ${color} from image point!`);
+    }
+  };
+
+  // Camera functions
   const openCamera = async () => {
     setCameraError('');
     setCameraReady(false);
@@ -164,34 +257,29 @@ const HexFinder = () => {
     setValidationMessage('Requesting camera access...');
     
     try {
-      // Check if getUserMedia is supported
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         throw new Error('Camera not supported in this browser');
       }
 
-      // Request camera access with basic constraints
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: { 
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          facingMode: 'environment'
+        },
         audio: false
       });
-
-      if (!stream) {
-        throw new Error('Failed to get camera stream');
-      }
 
       streamRef.current = stream;
       setValidationMessage('Camera access granted, setting up video...');
 
-      // Wait for next frame to ensure video element is rendered
       requestAnimationFrame(() => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           
-          // Set up event handlers
           const handleVideoReady = () => {
             setCameraReady(true);
             setValidationMessage('Camera ready! Click capture to take a photo.');
-            console.log('Video ready, dimensions:', videoRef.current.videoWidth, 'x', videoRef.current.videoHeight);
           };
 
           const handleVideoError = (error) => {
@@ -200,134 +288,56 @@ const HexFinder = () => {
             closeCamera();
           };
 
-          // Remove any existing listeners
           videoRef.current.removeEventListener('loadedmetadata', handleVideoReady);
           videoRef.current.removeEventListener('canplay', handleVideoReady);
           videoRef.current.removeEventListener('error', handleVideoError);
-
-          // Add event listeners
-          videoRef.current.addEventListener('loadedmetadata', handleVideoReady, { once: true });
-          videoRef.current.addEventListener('canplay', handleVideoReady, { once: true });
-          videoRef.current.addEventListener('error', handleVideoError, { once: true });
-
-          // Try to play the video
-          const playPromise = videoRef.current.play();
-          if (playPromise !== undefined) {
-            playPromise
-              .then(() => {
-                console.log('Video started playing');
-              })
-              .catch((error) => {
-                console.warn('Auto-play failed, but video might still work:', error);
-                // Video might still be usable even if autoplay fails
-                if (videoRef.current && videoRef.current.readyState >= 2) {
-                  handleVideoReady();
-                }
-              });
-          }
-
-          // Fallback: Check if video is ready after a delay
-          setTimeout(() => {
-            if (videoRef.current && videoRef.current.readyState >= 2 && !cameraReady) {
-              handleVideoReady();
-            }
-          }, 2000);
-
-        } else {
-          throw new Error('Video element not found after DOM update');
+          
+          videoRef.current.addEventListener('loadedmetadata', handleVideoReady);
+          videoRef.current.addEventListener('canplay', handleVideoReady);
+          videoRef.current.addEventListener('error', handleVideoError);
         }
       });
 
     } catch (error) {
-      console.error('Camera access error:', error);
-      let errorMessage = 'Error accessing camera: ';
-      
-      if (error.name === 'NotAllowedError') {
-        errorMessage += 'Please allow camera permissions and try again.';
-      } else if (error.name === 'NotFoundError') {
-        errorMessage += 'No camera device found.';
-      } else if (error.name === 'NotSupportedError') {
-        errorMessage += 'Camera not supported in this browser.';
-      } else if (error.name === 'NotReadableError') {
-        errorMessage += 'Camera is already in use by another application.';
-      } else {
-        errorMessage += error.message || 'Unknown error occurred.';
-      }
-      
-      setCameraError(errorMessage);
-      setValidationMessage(errorMessage);
-      closeCamera();
+      console.error('Camera error:', error);
+      setCameraError(`Camera access denied: ${error.message}`);
+      setIsCameraOpen(false);
+      setValidationMessage('');
     }
   };
 
   const capturePhoto = () => {
-    if (!videoRef.current || !canvasRef.current || !cameraReady) {
-      setValidationMessage('Camera not ready for capture. Please wait a moment.');
-      return;
-    }
+    if (!videoRef.current || !canvasRef.current) return;
 
-    try {
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-      const context = canvas.getContext('2d');
-      
-      // Check if video has valid dimensions
-      if (video.videoWidth === 0 || video.videoHeight === 0) {
-        setValidationMessage('Video stream not ready. Please wait and try again.');
-        return;
-      }
-      
-      // Set canvas size to match video
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      
-      // Draw the current video frame to canvas
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      
-      // Convert canvas to blob and process
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const file = new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' });
-          processImageFile(file);
-          closeCamera();
-          setValidationMessage('Photo captured successfully!');
-        } else {
-          setValidationMessage('Failed to capture photo. Please try again.');
-        }
-      }, 'image/jpeg', 0.9);
-      
-    } catch (error) {
-      console.error('Capture error:', error);
-      setValidationMessage('Error capturing photo: ' + error.message);
-    }
+    const canvas = canvasRef.current;
+    const video = videoRef.current;
+    const context = canvas.getContext('2d');
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0);
+
+    canvas.toBlob((blob) => {
+      const file = new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' });
+      processImageFile(file);
+      closeCamera();
+    }, 'image/jpeg', 0.8);
   };
 
   const closeCamera = () => {
-    // Stop all tracks
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => {
-        track.stop();
-        console.log('Stopped camera track:', track.kind);
-      });
+      streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
     }
-    
-    // Clear video source
     if (videoRef.current) {
       videoRef.current.srcObject = null;
-      // Remove event listeners
-      videoRef.current.removeEventListener('loadedmetadata', () => {});
-      videoRef.current.removeEventListener('canplay', () => {});
-      videoRef.current.removeEventListener('error', () => {});
     }
-    
-    // Reset states
     setIsCameraOpen(false);
-    setCameraError('');
     setCameraReady(false);
     setValidationMessage('Camera closed');
   };
 
+  // Utility functions
   const selectColorFromExtracted = (color) => {
     setCurrentColor(color.hex);
     setHexInput(color.hex);
@@ -338,6 +348,9 @@ const HexFinder = () => {
   const clearImage = () => {
     setImagePreview(null);
     setExtractedColors([]);
+    setShowPointer(false);
+    setCurrentImageFile(null);
+    setPointerColor('#000000');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -348,14 +361,31 @@ const HexFinder = () => {
     const value = e.target.value;
     setHexInput(value);
     
+    // Auto-validate and update color display as user types
     if (value.length >= 6) {
-      validateHex(value);
+      const hexPattern = /^#?[0-9A-Fa-f]{6}$/;
+      if (hexPattern.test(value)) {
+        const formattedHex = value.startsWith('#') ? value : `#${value}`;
+        setCurrentColor(formattedHex);
+        
+        // Convert to RGB
+        const r = parseInt(formattedHex.substring(1, 3), 16);
+        const g = parseInt(formattedHex.substring(3, 5), 16);
+        const b = parseInt(formattedHex.substring(5, 7), 16);
+        setRgbInput({ r, g, b });
+      }
     }
   };
 
   const handleRgbInputChange = (color, value) => {
     const numValue = Math.min(255, Math.max(0, parseInt(value) || 0));
-    setRgbInput(prev => ({ ...prev, [color]: numValue }));
+    const newRgb = { ...rgbInput, [color]: numValue };
+    setRgbInput(newRgb);
+    
+    // Auto-convert to HEX and update color display
+    const hex = `#${newRgb.r.toString(16).padStart(2, '0')}${newRgb.g.toString(16).padStart(2, '0')}${newRgb.b.toString(16).padStart(2, '0')}`.toUpperCase();
+    setCurrentColor(hex);
+    setHexInput(hex);
   };
 
   const copyToClipboard = (color) => {
@@ -366,7 +396,6 @@ const HexFinder = () => {
   useEffect(() => {
     generateRandomColor();
     
-    // Cleanup camera stream on unmount
     return () => {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
@@ -379,15 +408,40 @@ const HexFinder = () => {
       <div className="hex-finder-container">
         <h1 className="hex-finder-title">HEX Color Finder</h1>
         
-        {/* Color Display */}
-        <div className="color-display">
+        {/* Color Display - Fixed with inline styles as fallback */}
+        <div className="color-display" style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
           <div 
-            className="color-preview" 
-            style={{ backgroundColor: currentColor }}
+            className="color-preview"
+            style={{ 
+              backgroundColor: currentColor,
+              width: '200px',
+              height: '200px',
+              borderRadius: '1rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+              border: '4px solid white'
+            }}
             onClick={() => copyToClipboard(currentColor)}
             title="Click to copy"
           >
-            <span className="color-text">{currentColor}</span>
+            <span 
+              className="color-text"
+              style={{
+                background: 'rgba(255, 255, 255, 0.9)',
+                color: '#1f2937',
+                padding: '0.5rem 1rem',
+                borderRadius: '0.5rem',
+                fontWeight: '600',
+                fontSize: '1.1rem',
+                backdropFilter: 'blur(10px)'
+              }}
+            >
+              {currentColor}
+            </span>
           </div>
         </div>
 
@@ -424,14 +478,42 @@ const HexFinder = () => {
               )}
             </div>
             
-            {/* Image Preview */}
+            {/* Image Preview with Pointer */}
             {imagePreview && (
               <div className="image-preview">
-                <img 
-                  src={imagePreview} 
-                  alt="Uploaded" 
-                  className="preview-image"
-                />
+                <div className="image-container">
+                  <img 
+                    ref={imageRef}
+                    src={imagePreview} 
+                    alt="Uploaded" 
+                    className="preview-image"
+                    onMouseMove={handleImageMouseMove}
+                    onClick={handleImageClick}
+                  />
+                  {showPointer && (
+                    <div 
+                      className="color-pointer"
+                      style={{
+                        left: pointerPosition.x,
+                        top: pointerPosition.y,
+                      }}
+                    >
+                      <div className="pointer-dot"></div>
+                      <div className="pointer-tooltip">
+                        <div 
+                          className="pointer-color-preview"
+                          style={{ backgroundColor: pointerColor }}
+                        ></div>
+                        <span className="pointer-hex">{pointerColor}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                {showPointer && (
+                  <div className="pointer-instructions">
+                    <span>🖱️ Move mouse to see colors | 🖱️ Click to select color</span>
+                  </div>
+                )}
               </div>
             )}
             
@@ -441,49 +523,27 @@ const HexFinder = () => {
                 <div className="camera-container">
                   <div className="camera-box">
                     <video 
-                      ref={videoRef} 
-                      autoPlay 
-                      playsInline 
-                      muted
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
                       className="camera-video"
-                      style={{
-                        width: '100%',
-                        maxWidth: '400px',
-                        height: '300px',
-                        backgroundColor: '#000',
-                        borderRadius: '8px',
-                        objectFit: 'cover'
-                      }}
                     />
-                    {!cameraReady && (
-                      <div className="camera-overlay">
-                        <div className="loading-spinner"></div>
-                        <p>Initializing camera...</p>
-                      </div>
-                    )}
                   </div>
-                  
-                  {cameraError && (
-                    <div className="camera-error">
-                      ❌ {cameraError}
-                    </div>
-                  )}
-                </div>
-                
-                <div className="camera-controls">
-                  <button 
-                    onClick={capturePhoto} 
-                    className="btn btn-primary"
-                    disabled={!cameraReady}
-                  >
-                    📸 Capture Photo
-                  </button>
-                  <button 
-                    onClick={closeCamera} 
-                    className="btn btn-secondary"
-                  >
-                    ❌ Close Camera
-                  </button>
+                  <div className="camera-controls">
+                    <button 
+                      onClick={capturePhoto}
+                      className="btn btn-primary"
+                      disabled={!cameraReady}
+                    >
+                      📸 Capture Photo
+                    </button>
+                    <button 
+                      onClick={closeCamera}
+                      className="btn btn-danger"
+                    >
+                      ✕ Close Camera
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -641,8 +701,13 @@ const HexFinder = () => {
                   key={index}
                   className="palette-color"
                   style={{ backgroundColor: color.hex }}
-                  onClick={() => copyToClipboard(color.hex)}
-                  title={`${color.hex} - Click to copy`}
+                  onClick={() => {
+                    setCurrentColor(color.hex);
+                    setHexInput(color.hex);
+                    setRgbInput(color.rgb);
+                    copyToClipboard(color.hex);
+                  }}
+                  title={`${color.hex} - Click to select and copy`}
                 >
                   <span className="palette-color-text">{color.hex}</span>
                 </div>

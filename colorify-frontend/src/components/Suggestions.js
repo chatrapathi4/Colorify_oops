@@ -33,7 +33,7 @@ const Suggestions = () => {
       const mockSuggestions = generateMockSuggestions(selectedType, userPreferences);
       setSuggestions(mockSuggestions);
       setIsLoading(false);
-    }, 1000);
+    }, 500);
   };
 
   const generateMockSuggestions = (type, preferences) => {
@@ -68,11 +68,81 @@ const Suggestions = () => {
           confidence: 82,
           tags: ['earthy', 'warm', 'natural'],
           usage: 'Great for lifestyle and home decor brands'
+        },
+        {
+          id: 4,
+          title: 'Neon Cyber',
+          colors: ['#FF0080', '#00FF80', '#8000FF', '#FF8000', '#0080FF'],
+          description: 'Bold neon colors inspired by cyberpunk aesthetics',
+          reason: 'Rising trend in gaming and entertainment industries',
+          confidence: 85,
+          tags: ['neon', 'cyberpunk', 'bold'],
+          usage: 'Perfect for gaming platforms and tech startups'
+        },
+        {
+          id: 5,
+          title: 'Sage Green Minimalism',
+          colors: ['#9CAF88', '#B8C5A0', '#D4DAB8', '#F0F3E8', '#FFFFFF'],
+          description: 'Soft sage green palette for minimal aesthetics',
+          reason: 'Growing trend in wellness and mindfulness brands',
+          confidence: 90,
+          tags: ['minimal', 'calm', 'nature'],
+          usage: 'Excellent for wellness apps and lifestyle brands'
+        },
+        {
+          id: 6,
+          title: 'Sunset Gradient',
+          colors: ['#FF6B6B', '#FFE66D', '#FF8E53', '#FF6B9D', '#C44569'],
+          description: 'Warm gradient colors inspired by golden hour',
+          reason: 'Popular in social media and photography apps',
+          confidence: 87,
+          tags: ['warm', 'gradient', 'social'],
+          usage: 'Great for photography and social media platforms'
+        },
+        {
+          id: 7,
+          title: 'Ocean Depths',
+          colors: ['#0D47A1', '#1565C0', '#1976D2', '#42A5F5', '#90CAF9'],
+          description: 'Deep blue gradient reminiscent of ocean depths',
+          reason: 'Trending in fintech and professional services',
+          confidence: 83,
+          tags: ['professional', 'trust', 'depth'],
+          usage: 'Perfect for financial and professional applications'
+        },
+        {
+          id: 8,
+          title: 'Pastel Rainbow',
+          colors: ['#FFB3E6', '#FFCCB3', '#FFFFB3', '#CCFFB3', '#B3E6FF'],
+          description: 'Soft pastel rainbow for contemporary design',
+          reason: 'Rising in creative and artistic communities',
+          confidence: 79,
+          tags: ['pastel', 'creative', 'soft'],
+          usage: 'Ideal for creative portfolios and art platforms'
+        },
+        {
+          id: 9,
+          title: 'Monochrome Gold',
+          colors: ['#FFD700', '#FFC107', '#FF8F00', '#FF6F00', '#E65100'],
+          description: 'Luxurious gold monochrome palette',
+          reason: 'Gaining popularity in premium brand design',
+          confidence: 91,
+          tags: ['luxury', 'premium', 'elegant'],
+          usage: 'Perfect for luxury brands and high-end services'
+        },
+        {
+          id: 10,
+          title: 'Earth Revival',
+          colors: ['#8D6E63', '#A1887F', '#BCAAA4', '#D7CCC8', '#EFEBE9'],
+          description: 'Natural earth tones for sustainable design',
+          reason: 'Growing trend with environmental consciousness',
+          confidence: 86,
+          tags: ['sustainable', 'natural', 'earthy'],
+          usage: 'Great for eco-friendly and sustainable brands'
         }
       ],
       harmony: [
         {
-          id: 4,
+          id: 11,
           title: 'Complementary Balance',
           colors: ['#FF6B35', '#359AFF', '#FFE5D9', '#D9EFFF', '#FFFFFF'],
           description: 'Perfect complementary color relationship',
@@ -82,7 +152,7 @@ const Suggestions = () => {
           usage: 'Excellent for call-to-action buttons and highlights'
         },
         {
-          id: 5,
+          id: 12,
           title: 'Analogous Serenity',
           colors: ['#4A90E2', '#7B68EE', '#9370DB', '#C8E6C9', '#E8F5E8'],
           description: 'Harmonious blues and purples with nature accents',
@@ -92,7 +162,7 @@ const Suggestions = () => {
           usage: 'Perfect for wellness apps and healthcare websites'
         },
         {
-          id: 6,
+          id: 13,
           title: 'Triadic Energy',
           colors: ['#FF4136', '#FFDC00', '#0074D9', '#FFE6E6', '#FFF8DC'],
           description: 'Vibrant triadic color scheme for high energy',
@@ -100,11 +170,81 @@ const Suggestions = () => {
           confidence: 87,
           tags: ['energetic', 'vibrant', 'playful'],
           usage: 'Great for gaming, sports, and entertainment brands'
+        },
+        {
+          id: 14,
+          title: 'Split Complementary',
+          colors: ['#FF5722', '#4CAF50', '#2196F3', '#FFCCBC', '#E8F5E8'],
+          description: 'Sophisticated split complementary harmony',
+          reason: 'Provides contrast while maintaining balance',
+          confidence: 92,
+          tags: ['sophisticated', 'balanced', 'modern'],
+          usage: 'Perfect for modern web applications and UI design'
+        },
+        {
+          id: 15,
+          title: 'Tetradic Square',
+          colors: ['#E91E63', '#4CAF50', '#FF9800', '#2196F3', '#F3E5F5'],
+          description: 'Four-color square harmony for rich designs',
+          reason: 'Offers maximum color variety while staying harmonious',
+          confidence: 85,
+          tags: ['rich', 'varied', 'complex'],
+          usage: 'Excellent for complex interfaces and data visualization'
+        },
+        {
+          id: 16,
+          title: 'Monochromatic Blue',
+          colors: ['#0D47A1', '#1976D2', '#42A5F5', '#90CAF9', '#E3F2FD'],
+          description: 'Classic monochromatic blue progression',
+          reason: 'Creates unity and sophistication',
+          confidence: 96,
+          tags: ['unified', 'professional', 'classic'],
+          usage: 'Ideal for corporate and professional applications'
+        },
+        {
+          id: 17,
+          title: 'Warm Analogous',
+          colors: ['#FF5722', '#FF9800', '#FFC107', '#FFEB3B', '#FFF9C4'],
+          description: 'Warm analogous colors from red to yellow',
+          reason: 'Creates warmth and energy while maintaining harmony',
+          confidence: 89,
+          tags: ['warm', 'energetic', 'friendly'],
+          usage: 'Perfect for food, hospitality, and lifestyle brands'
+        },
+        {
+          id: 18,
+          title: 'Cool Analogous',
+          colors: ['#2196F3', '#00BCD4', '#4CAF50', '#8BC34A', '#E8F5E8'],
+          description: 'Cool analogous palette from blue to green',
+          reason: 'Evokes nature and tranquility',
+          confidence: 91,
+          tags: ['cool', 'natural', 'calming'],
+          usage: 'Great for environmental and health-focused applications'
+        },
+        {
+          id: 19,
+          title: 'Double Complementary',
+          colors: ['#E91E63', '#4CAF50', '#FF9800', '#2196F3', '#FFFFFF'],
+          description: 'Dynamic double complementary scheme',
+          reason: 'Provides rich contrast and visual interest',
+          confidence: 84,
+          tags: ['dynamic', 'rich', 'contrasting'],
+          usage: 'Excellent for creative projects and artistic portfolios'
+        },
+        {
+          id: 20,
+          title: 'Neutral Harmony',
+          colors: ['#795548', '#9E9E9E', '#607D8B', '#F5F5F5', '#FFFFFF'],
+          description: 'Sophisticated neutral color harmony',
+          reason: 'Creates timeless elegance and versatility',
+          confidence: 93,
+          tags: ['neutral', 'timeless', 'elegant'],
+          usage: 'Perfect for luxury brands and minimalist designs'
         }
       ],
       psychology: [
         {
-          id: 7,
+          id: 21,
           title: 'Trust & Reliability',
           colors: ['#1E40AF', '#3B82F6', '#60A5FA', '#DBEAFE', '#F0F9FF'],
           description: 'Blues that inspire trust and professionalism',
@@ -114,7 +254,7 @@ const Suggestions = () => {
           usage: 'Ideal for financial services and corporate websites'
         },
         {
-          id: 8,
+          id: 22,
           title: 'Energy & Appetite',
           colors: ['#DC2626', '#EF4444', '#F87171', '#FEE2E2', '#FEF2F2'],
           description: 'Reds that stimulate appetite and urgency',
@@ -124,7 +264,7 @@ const Suggestions = () => {
           usage: 'Perfect for food delivery apps and sale banners'
         },
         {
-          id: 9,
+          id: 23,
           title: 'Growth & Harmony',
           colors: ['#059669', '#10B981', '#34D399', '#D1FAE5', '#ECFDF5'],
           description: 'Greens that represent growth and balance',
@@ -132,11 +272,81 @@ const Suggestions = () => {
           confidence: 89,
           tags: ['natural', 'growing', 'balanced'],
           usage: 'Excellent for environmental and finance apps'
+        },
+        {
+          id: 24,
+          title: 'Creativity & Innovation',
+          colors: ['#7C3AED', '#A855F7', '#C084FC', '#E9D5FF', '#FAF5FF'],
+          description: 'Purple tones that stimulate creativity',
+          reason: 'Associated with imagination and luxury',
+          confidence: 87,
+          tags: ['creative', 'imaginative', 'luxury'],
+          usage: 'Perfect for creative platforms and premium services'
+        },
+        {
+          id: 25,
+          title: 'Happiness & Optimism',
+          colors: ['#F59E0B', '#FBBF24', '#FCD34D', '#FEF3C7', '#FFFBEB'],
+          description: 'Yellow hues that promote positivity',
+          reason: 'Stimulates mental activity and generates muscle energy',
+          confidence: 85,
+          tags: ['optimistic', 'cheerful', 'energizing'],
+          usage: 'Great for educational and children\'s applications'
+        },
+        {
+          id: 26,
+          title: 'Sophistication & Elegance',
+          colors: ['#111827', '#374151', '#6B7280', '#D1D5DB', '#F9FAFB'],
+          description: 'Grays that convey sophistication and neutrality',
+          reason: 'Associated with professionalism and timelessness',
+          confidence: 92,
+          tags: ['sophisticated', 'neutral', 'timeless'],
+          usage: 'Ideal for luxury brands and professional portfolios'
+        },
+        {
+          id: 27,
+          title: 'Passion & Romance',
+          colors: ['#BE185D', '#EC4899', '#F472B6', '#FBCFE8', '#FDF2F8'],
+          description: 'Pink tones that evoke romance and compassion',
+          reason: 'Associated with love, care, and nurturing',
+          confidence: 83,
+          tags: ['romantic', 'caring', 'feminine'],
+          usage: 'Perfect for beauty, wellness, and lifestyle brands'
+        },
+        {
+          id: 28,
+          title: 'Stability & Security',
+          colors: ['#92400E', '#B45309', '#D97706', '#FCD34D', '#FEF3C7'],
+          description: 'Brown and orange tones for stability',
+          reason: 'Earth tones create feelings of security and comfort',
+          confidence: 88,
+          tags: ['stable', 'secure', 'earthy'],
+          usage: 'Great for real estate and financial planning services'
+        },
+        {
+          id: 29,
+          title: 'Technology & Innovation',
+          colors: ['#0EA5E9', '#06B6D4', '#67E8F9', '#CFFAFE', '#F0FDFF'],
+          description: 'Cyan blues that represent technology',
+          reason: 'Associated with digital innovation and clarity',
+          confidence: 90,
+          tags: ['tech', 'innovative', 'digital'],
+          usage: 'Perfect for SaaS platforms and tech startups'
+        },
+        {
+          id: 30,
+          title: 'Health & Vitality',
+          colors: ['#059669', '#10B981', '#6EE7B7', '#D1FAE5', '#ECFDF5'],
+          description: 'Fresh greens promoting health and vitality',
+          reason: 'Associated with life, renewal, and wellness',
+          confidence: 94,
+          tags: ['healthy', 'vital', 'fresh'],
+          usage: 'Excellent for healthcare and fitness applications'
         }
       ],
       accessibility: [
         {
-          id: 10,
+          id: 31,
           title: 'High Contrast Pro',
           colors: ['#000000', '#FFFFFF', '#1F2937', '#F9FAFB', '#6B7280'],
           description: 'Maximum accessibility with perfect contrast ratios',
@@ -146,7 +356,7 @@ const Suggestions = () => {
           usage: 'Essential for government and educational websites'
         },
         {
-          id: 11,
+          id: 32,
           title: 'Colorblind Friendly',
           colors: ['#0173B2', '#DE8F05', '#029E73', '#CC78BC', '#CA9161'],
           description: 'Colors distinguishable by all types of colorblindness',
@@ -154,11 +364,91 @@ const Suggestions = () => {
           confidence: 95,
           tags: ['colorblind-safe', 'inclusive', 'universal'],
           usage: 'Important for data visualization and charts'
+        },
+        {
+          id: 33,
+          title: 'Low Vision Support',
+          colors: ['#1A1A1A', '#FFFFFF', '#FFD700', '#FF4444', '#44FF44'],
+          description: 'High contrast colors for low vision users',
+          reason: 'Provides maximum visibility for users with visual impairments',
+          confidence: 98,
+          tags: ['low-vision', 'high-contrast', 'accessible'],
+          usage: 'Critical for accessibility-focused applications'
+        },
+        {
+          id: 34,
+          title: 'Blue-Yellow Safe',
+          colors: ['#0066CC', '#FFCC00', '#000066', '#FFFF99', '#FFFFFF'],
+          description: 'Safe color combination for blue-yellow colorblindness',
+          reason: 'Avoids problematic red-green combinations',
+          confidence: 93,
+          tags: ['tritanopia-safe', 'accessible', 'clear'],
+          usage: 'Excellent for medical and safety applications'
+        },
+        {
+          id: 35,
+          title: 'Pattern + Color',
+          colors: ['#2D5AA0', '#F15A24', '#8DC63F', '#8B7CA6', '#F7941D'],
+          description: 'Colors designed to work with patterns for accessibility',
+          reason: 'Combines color with other visual cues for clarity',
+          confidence: 89,
+          tags: ['pattern-friendly', 'multi-modal', 'accessible'],
+          usage: 'Perfect for complex data visualization'
+        },
+        {
+          id: 36,
+          title: 'Dark Mode Accessible',
+          colors: ['#121212', '#1E1E1E', '#BB86FC', '#03DAC6', '#FFFFFF'],
+          description: 'Dark mode colors that maintain accessibility',
+          reason: 'Reduces eye strain while keeping contrast ratios',
+          confidence: 91,
+          tags: ['dark-mode', 'eye-friendly', 'modern'],
+          usage: 'Ideal for applications with dark theme options'
+        },
+        {
+          id: 37,
+          title: 'Elderly-Friendly',
+          colors: ['#000080', '#FFFFFF', '#800000', '#008000', '#FFD700'],
+          description: 'Colors optimized for elderly users',
+          reason: 'Accounts for age-related vision changes',
+          confidence: 87,
+          tags: ['senior-friendly', 'clear', 'readable'],
+          usage: 'Great for healthcare and senior-focused applications'
+        },
+        {
+          id: 38,
+          title: 'Motion Sensitivity',
+          colors: ['#4A5568', '#E2E8F0', '#2D3748', '#F7FAFC', '#718096'],
+          description: 'Calm colors that reduce motion sensitivity triggers',
+          reason: 'Avoids high contrast flashing combinations',
+          confidence: 85,
+          tags: ['motion-safe', 'calm', 'gentle'],
+          usage: 'Important for users with vestibular disorders'
+        },
+        {
+          id: 39,
+          title: 'Cognitive Load Reduction',
+          colors: ['#2B6CB0', '#FFFFFF', '#319795', '#F7FAFC', '#4A5568'],
+          description: 'Simple color scheme to reduce cognitive load',
+          reason: 'Limited palette reduces decision fatigue',
+          confidence: 92,
+          tags: ['simple', 'cognitive-friendly', 'clean'],
+          usage: 'Perfect for educational and medical applications'
+        },
+        {
+          id: 40,
+          title: 'Print-Safe Accessible',
+          colors: ['#000000', '#FFFFFF', '#4A5568', '#F7FAFC', '#2D3748'],
+          description: 'Colors that maintain accessibility when printed',
+          reason: 'Ensures contrast is maintained in grayscale',
+          confidence: 96,
+          tags: ['print-safe', 'grayscale-friendly', 'universal'],
+          usage: 'Essential for documents and printable materials'
         }
       ],
       industry: [
         {
-          id: 12,
+          id: 41,
           title: 'Tech Startup',
           colors: ['#667EEA', '#764BA2', '#F093FB', '#F5576C', '#4FACFE'],
           description: 'Modern gradients popular in tech companies',
@@ -168,7 +458,7 @@ const Suggestions = () => {
           usage: 'Perfect for SaaS platforms and mobile apps'
         },
         {
-          id: 13,
+          id: 42,
           title: 'Healthcare Trust',
           colors: ['#0EA5E9', '#22C55E', '#FFFFFF', '#F0F9FF', '#ECFDF5'],
           description: 'Clean, trustworthy colors for healthcare',
@@ -176,11 +466,91 @@ const Suggestions = () => {
           confidence: 94,
           tags: ['medical', 'clean', 'trustworthy'],
           usage: 'Ideal for medical apps and healthcare websites'
+        },
+        {
+          id: 43,
+          title: 'Financial Security',
+          colors: ['#1E3A8A', '#1E40AF', '#3B82F6', '#DBEAFE', '#F0F9FF'],
+          description: 'Conservative blues for financial services',
+          reason: 'Conveys stability, trust, and professionalism',
+          confidence: 96,
+          tags: ['financial', 'stable', 'professional'],
+          usage: 'Perfect for banks and investment platforms'
+        },
+        {
+          id: 44,
+          title: 'Education Excellence',
+          colors: ['#7C2D12', '#DC2626', '#FBBF24', '#FEF3C7', '#FFFBEB'],
+          description: 'Warm academic colors for education',
+          reason: 'Creates welcoming and stimulating learning environment',
+          confidence: 88,
+          tags: ['educational', 'warm', 'engaging'],
+          usage: 'Great for schools and e-learning platforms'
+        },
+        {
+          id: 45,
+          title: 'Retail Energy',
+          colors: ['#DC2626', '#F59E0B', '#FFFFFF', '#FEE2E2', '#FEF3C7'],
+          description: 'Energetic colors for retail and e-commerce',
+          reason: 'Stimulates purchasing decisions and urgency',
+          confidence: 85,
+          tags: ['retail', 'energetic', 'commercial'],
+          usage: 'Perfect for e-commerce and retail applications'
+        },
+        {
+          id: 46,
+          title: 'Legal Authority',
+          colors: ['#1F2937', '#374151', '#6B7280', '#D1D5DB', '#F9FAFB'],
+          description: 'Authoritative grays for legal services',
+          reason: 'Conveys professionalism and trustworthiness',
+          confidence: 93,
+          tags: ['legal', 'authoritative', 'professional'],
+          usage: 'Ideal for law firms and legal platforms'
+        },
+        {
+          id: 47,
+          title: 'Food & Hospitality',
+          colors: ['#DC2626', '#F59E0B', '#84CC16', '#FFFFFF', '#FEF3C7'],
+          description: 'Appetizing colors for food industry',
+          reason: 'Stimulates appetite and creates warmth',
+          confidence: 90,
+          tags: ['food', 'appetizing', 'warm'],
+          usage: 'Perfect for restaurants and food delivery apps'
+        },
+        {
+          id: 48,
+          title: 'Real Estate Luxury',
+          colors: ['#92400E', '#B45309', '#D97706', '#FCD34D', '#FEF3C7'],
+          description: 'Earthy luxury tones for real estate',
+          reason: 'Conveys stability, investment, and quality',
+          confidence: 87,
+          tags: ['luxury', 'stable', 'premium'],
+          usage: 'Great for real estate and property platforms'
+        },
+        {
+          id: 49,
+          title: 'Entertainment Vibrant',
+          colors: ['#7C3AED', '#EC4899', '#F59E0B', '#10B981', '#3B82F6'],
+          description: 'Vibrant colors for entertainment industry',
+          reason: 'Creates excitement and captures attention',
+          confidence: 83,
+          tags: ['vibrant', 'entertaining', 'exciting'],
+          usage: 'Perfect for gaming and entertainment platforms'
+        },
+        {
+          id: 50,
+          title: 'Non-Profit Compassion',
+          colors: ['#059669', '#0EA5E9', '#FFFFFF', '#ECFDF5', '#F0F9FF'],
+          description: 'Compassionate colors for non-profit organizations',
+          reason: 'Evokes trust, hope, and positive change',
+          confidence: 91,
+          tags: ['compassionate', 'hopeful', 'trustworthy'],
+          usage: 'Ideal for charities and non-profit organizations'
         }
       ],
       seasonal: [
         {
-          id: 14,
+          id: 51,
           title: 'Spring Awakening',
           colors: ['#84CC16', '#EAB308', '#F97316', '#EC4899', '#8B5CF6'],
           description: 'Fresh, vibrant colors of spring renewal',
@@ -190,7 +560,17 @@ const Suggestions = () => {
           usage: 'Great for spring campaigns and lifestyle brands'
         },
         {
-          id: 15,
+          id: 52,
+          title: 'Summer Sunshine',
+          colors: ['#FBBF24', '#F59E0B', '#EF4444', '#EC4899', '#FFFFFF'],
+          description: 'Bright summer colors full of energy',
+          reason: 'Evokes warmth, joy, and outdoor activities',
+          confidence: 92,
+          tags: ['bright', 'energetic', 'joyful'],
+          usage: 'Perfect for summer promotions and outdoor brands'
+        },
+        {
+          id: 53,
           title: 'Autumn Warmth',
           colors: ['#B45309', '#DC2626', '#EAB308', '#16A34A', '#7C2D12'],
           description: 'Rich, warm colors inspired by fall foliage',
@@ -198,6 +578,76 @@ const Suggestions = () => {
           confidence: 90,
           tags: ['warm', 'cozy', 'harvest'],
           usage: 'Perfect for autumn promotions and cozy brands'
+        },
+        {
+          id: 54,
+          title: 'Winter Elegance',
+          colors: ['#1E3A8A', '#1E40AF', '#FFFFFF', '#E0E7FF', '#F8FAFC'],
+          description: 'Cool, elegant colors of winter season',
+          reason: 'Creates sophisticated and serene atmosphere',
+          confidence: 89,
+          tags: ['cool', 'elegant', 'serene'],
+          usage: 'Ideal for winter campaigns and luxury brands'
+        },
+        {
+          id: 55,
+          title: 'Holiday Celebration',
+          colors: ['#DC2626', '#059669', '#FBBF24', '#FFFFFF', '#FEF2F2'],
+          description: 'Festive colors for holiday celebrations',
+          reason: 'Traditional holiday colors that evoke celebration',
+          confidence: 95,
+          tags: ['festive', 'traditional', 'celebratory'],
+          usage: 'Perfect for holiday marketing and seasonal promotions'
+        },
+        {
+          id: 56,
+          title: 'Easter Pastels',
+          colors: ['#F472B6', '#A855F7', '#22D3EE', '#84CC16', '#FEF08A'],
+          description: 'Soft pastel colors for Easter and spring celebrations',
+          reason: 'Associated with renewal and new beginnings',
+          confidence: 86,
+          tags: ['pastel', 'spring', 'renewal'],
+          usage: 'Great for spring festivals and family-oriented brands'
+        },
+        {
+          id: 57,
+          title: 'Halloween Mystery',
+          colors: ['#EA580C', '#000000', '#7C2D12', '#F59E0B', '#FED7AA'],
+          description: 'Mysterious colors for Halloween and autumn events',
+          reason: 'Creates spooky yet fun atmosphere',
+          confidence: 84,
+          tags: ['spooky', 'mysterious', 'fun'],
+          usage: 'Perfect for Halloween promotions and entertainment'
+        },
+        {
+          id: 58,
+          title: 'Back to School',
+          colors: ['#1E40AF', '#DC2626', '#FBBF24', '#059669', '#FFFFFF'],
+          description: 'Classic school colors for educational campaigns',
+          reason: 'Evokes learning, growth, and academic achievement',
+          confidence: 88,
+          tags: ['academic', 'learning', 'classic'],
+          usage: 'Ideal for educational institutions and learning platforms'
+        },
+        {
+          id: 59,
+          title: 'Summer Vacation',
+          colors: ['#0EA5E9', '#06B6D4', '#FBBF24', '#FFFFFF', '#F0F9FF'],
+          description: 'Beach-inspired colors for summer vacations',
+          reason: 'Evokes relaxation, ocean, and tropical destinations',
+          confidence: 91,
+          tags: ['beach', 'relaxing', 'tropical'],
+          usage: 'Perfect for travel and vacation-related applications'
+        },
+        {
+          id: 60,
+          title: 'New Year Fresh Start',
+          colors: ['#3B82F6', '#8B5CF6', '#FBBF24', '#FFFFFF', '#F0F9FF'],
+          description: 'Inspiring colors for new year and fresh starts',
+          reason: 'Conveys optimism, new beginnings, and achievement',
+          confidence: 87,
+          tags: ['optimistic', 'fresh', 'inspiring'],
+          usage: 'Great for New Year campaigns and goal-setting apps'
         }
       ]
     };
@@ -250,56 +700,6 @@ const Suggestions = () => {
             Get intelligent color recommendations based on trends, psychology, and best practices
           </p>
         </header>
-
-        {/* User Preferences */}
-        <div className="preferences-section">
-          <h3 className="preferences-title">Customize Your Suggestions</h3>
-          <div className="preferences-grid">
-            <div className="preference-group">
-              <label className="preference-label">Style</label>
-              <select 
-                value={userPreferences.style}
-                onChange={(e) => setUserPreferences(prev => ({ ...prev, style: e.target.value }))}
-                className="preference-select"
-              >
-                <option value="modern">Modern</option>
-                <option value="classic">Classic</option>
-                <option value="minimalist">Minimalist</option>
-                <option value="bold">Bold</option>
-                <option value="vintage">Vintage</option>
-              </select>
-            </div>
-            <div className="preference-group">
-              <label className="preference-label">Mood</label>
-              <select 
-                value={userPreferences.mood}
-                onChange={(e) => setUserPreferences(prev => ({ ...prev, mood: e.target.value }))}
-                className="preference-select"
-              >
-                <option value="calm">Calm</option>
-                <option value="energetic">Energetic</option>
-                <option value="professional">Professional</option>
-                <option value="playful">Playful</option>
-                <option value="luxurious">Luxurious</option>
-              </select>
-            </div>
-            <div className="preference-group">
-              <label className="preference-label">Industry</label>
-              <select 
-                value={userPreferences.industry}
-                onChange={(e) => setUserPreferences(prev => ({ ...prev, industry: e.target.value }))}
-                className="preference-select"
-              >
-                <option value="tech">Technology</option>
-                <option value="healthcare">Healthcare</option>
-                <option value="finance">Finance</option>
-                <option value="education">Education</option>
-                <option value="retail">Retail</option>
-                <option value="creative">Creative</option>
-              </select>
-            </div>
-          </div>
-        </div>
 
         {/* Suggestion Types */}
         <div className="types-section">
@@ -403,7 +803,7 @@ const Suggestions = () => {
           {suggestions.length === 0 && !isLoading && (
             <div className="empty-state">
               <h3>No suggestions found</h3>
-              <p>Try adjusting your preferences or selecting a different suggestion type.</p>
+              <p>Try selecting a different suggestion type.</p>
             </div>
           )}
         </div>
