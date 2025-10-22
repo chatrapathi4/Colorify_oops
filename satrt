@@ -1,0 +1,7 @@
+Backend:
+
+from color project> .\mvnw.cmd spring-boot:run 
+
+frontend
+
+from colorify-frontend> npm start

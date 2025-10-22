@@ -29,8 +29,12 @@ const HexFinder = () => {
   const streamRef = useRef(null);
   const imageRef = useRef(null);
 
-  const API_BASE_URL = 'http://localhost:8080/api/hex';
-  const IMAGE_API_BASE_URL = 'http://localhost:8080/api/image';
+  const API_BASE_URL = process.env.REACT_APP_API_URL
+    ? `${process.env.REACT_APP_API_URL}/api/hex`
+    : 'http://localhost:8080/api/hex';
+  const IMAGE_API_BASE_URL = process.env.REACT_APP_IMAGE_API_URL
+    ? `${process.env.REACT_APP_IMAGE_API_URL}/api/image`
+    : 'http://localhost:8080/api/image';
 
   // Color functions
   const generateRandomColor = async () => {
