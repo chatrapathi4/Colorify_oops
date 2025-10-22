@@ -31,10 +31,10 @@ const HexFinder = () => {
 
   const API_BASE_URL = process.env.REACT_APP_API_URL
     ? `${process.env.REACT_APP_API_URL}/api/hex`
-    : 'http://localhost:8080/api/hex';
+    : '/api/hex';
   const IMAGE_API_BASE_URL = process.env.REACT_APP_IMAGE_API_URL
     ? `${process.env.REACT_APP_IMAGE_API_URL}/api/image`
-    : 'http://localhost:8080/api/image';
+    : '/api/image';
 
   // Color functions
   const generateRandomColor = async () => {
